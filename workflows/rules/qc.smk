@@ -1,33 +1,35 @@
-import sys
+import os
 from pathlib import Path
 from constants.common import *
 
+# --------------------------
+# Rule for every other common thing
+# --------------------------
+# rule comm_:
+#     shell:
+#         """
+#         mkdir -p {output.results_dir}
+#         """
+
+# --------------------------
+# FASTQC rule
+# --------------------------
 rule fastqc:
     input:
-        expand(
-            str(RAW_DATA_DIR) + "/{sample_id}_{meta_id}",
-            sample_id=sample_ids,
-            meta_id=meta_ids
-        )
+        fq = lambda wc: RAW_DATA_DIR / f"{wc.sample_id}.fastq.gz"
     output:
-        fqs = expand(
-            str(fastqc_dir) + "/{sample_id}_{root_id}_fastqc.{ext}",
-            sample_id=sample_ids,
-            root_id=root_meta_ids,
-            ext=["html", "zip"]
-        ),
-        fqc_out = directory(fastqc_dir)
-    message:
-        "Running FASTQC on {input}..."
+        html = FASTQC_DIR / "{sample_id}_fastqc.html",
+        zip  = FASTQC_DIR / "{sample_id}_fastqc.zip"
     log:
-        out = "logs/{sample_id}_{root_id}_fastqc_raw_out.log",
-        err = "logs/{sample_id}_{root_id}_fastqc_raw_err.log"
+        out = LOGS_DIR / "{sample_id}_fastqc_raw_out.log",
+        err = LOGS_DIR / "{sample_id}_fastqc_raw_err.log"
+    resources:
+        cpus=4
     shell:
         """
         module load fastqc/0.11.9
-        mkdir -p {output.fqc_out}
-        mkdir -p logs
-
-        fastqc -o {output.fqc_out} -f fastq {input} \
+        mkdir -p {FASTQC_DIR}
+        mkdir -p {LOGS_DIR}
+        fastqc -o {FASTQC_DIR} -t {resources.cpus} -f fastq {input.fq} \
         1> {log.out} 2> {log.err}
         """

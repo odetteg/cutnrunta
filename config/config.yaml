@@ -1,6 +1,9 @@
 ---
 snakefile: snakefile
+cores: 4
+--latency-wait: 60
+--restart-times: 3
 RAW_DATA_DIR: "/shared/projects/cutnrunta/so_/data_cp/data/Séquençage-2025_11_13"
-REF_DIR: "/shared/projects/cutnrunta/Ref_genome"
+REF_DIR: "/shared/projects/cutnrunta/so_/Ref_genome"
 SO_DIR: "/shared/projects/cutnrunta/so_"
 RESULTS_DIR: "/shared/projects/cutnrunta/so_/results"
