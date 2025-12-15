@@ -33,3 +33,23 @@ rule fastqc:
         fastqc -o {FASTQC_DIR} -t {resources.cpus} -f fastq {input.fq} \
         1> {log.out} 2> {log.err}
         """
+
+rule multiqc:
+    input:
+        expand(str(FASTQC_DIR) + "/{sample_id}_fastqc.zip", sample_id=sample_ids)
+    output:
+        multqc_rpt = RESULTS_DIR / "qc/multiqc/multiqc.html"
+    params:
+        mqc_dir = RESULTS_DIR / "qc/multiqc",
+    threads: config["resources"]["multiqc"]["cpu"]
+    log:
+        out = "logs/multiqc/multiqc.out.log",
+        err = "logs/multiqc/multiqc.err.log"
+    shell:
+        """
+        module load -f multiqc/1.29
+        mkdir -p {params.mqc_dir}
+        mkdir -p logs/multiqc
+        multiqc --force --outdir {params.mqc_dir} -n multiqc.html {input} \
+        1>{log.out} 2>{log.err}
+        """

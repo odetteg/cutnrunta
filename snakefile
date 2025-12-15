@@ -8,7 +8,7 @@ include: "workflows/rules/qc.smk"
 # ----------------------------
 # All global variables
 # ----------------------------
-EXTS=["fastq.gz"]
+
 
 
 # --------------------------
@@ -23,4 +23,5 @@ rule all:
         expand(
             str(FASTQC_DIR) + "/{sample_id}_fastqc.zip",
             sample_id=sample_ids,
-        )
+        ),
+        multqc_rpt = RESULTS_DIR / "qc/multiqc/multiqc.html"
