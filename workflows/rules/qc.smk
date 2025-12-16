@@ -33,6 +33,9 @@ rule fastqc:
         fastqc -o {FASTQC_DIR} -t {resources.cpus} -f fastq {input.fq} \
         1> {log.out} 2> {log.err}
         """
+# rule fastp_trim:
+#     input:
+
 
 rule multiqc:
     input:
