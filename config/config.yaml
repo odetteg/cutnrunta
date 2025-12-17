@@ -4,8 +4,17 @@ RAW_DATA_DIR: "/shared/projects/cutnrunta/so_/data_cp/data/Séquençage-2025_11_
 REF_DIR: "/shared/projects/cutnrunta/so_/Ref_genome"
 SO_DIR: "/shared/projects/cutnrunta/so_"
 RESULTS_DIR: "/shared/projects/cutnrunta/so_/results"
+FASTP_TRIMMED_DIR: "/shared/projects/cutnrunta/so_/results/trim/fastp"
+FASTP_QC_REPORTS_DIR: "/shared/projects/cutnrunta/so_/results/qc/fastp"
+FASQC_QC_FASTP_DIR: "/shared/projects/cutnrunta/so_/results/fastqc/trim/fastp"
 
+
+fastp_trim:
+  extra: "-q 15 -l 36"
 resources:
   multiqc:
     cpu: 4
+    time: 60
+  fastp_trim:
+    cpu: 8
     time: 60

@@ -29,7 +29,6 @@ LOGS_DIR = SO_DIR / "logs"
 samples_file = BASE_DIR / "samples.txt"
 samples_df = pd.read_csv(samples_file, header=None, names=["filename"])
 
-# Extract the sample IDs. The sample path just without the fastq exts
 sample_ids = []
 
 for filename in samples_df["filename"]:
@@ -84,7 +83,6 @@ def build_sample_metadata(samples_df):
     return sample_metadata
 
 sample_metadata = build_sample_metadata(samples_df)
-print(sample_metadata.head())
 
 
 def get_paired_rds(sample_id, sample_metadata=sample_metadata, raw_data_dir=RAW_DATA_DIR):
@@ -109,4 +107,7 @@ def get_paired_rds(sample_id, sample_metadata=sample_metadata, raw_data_dir=RAW_
     )
 
 base_ids = sample_metadata.index.tolist()
-print(get_paired_rds(base_ids[0]))
+
+for b in base_ids:
+    fwd, rev = get_paired_rds(b)
+    print(b, fwd, rev)
