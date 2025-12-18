@@ -20,7 +20,7 @@ SO_DIR = Path(config.get("SO_DIR"))
 RESULTS_DIR = Path(config.get("RESULTS_DIR"))
 
 # FASTQC and logs directories
-FASTQC_DIR = RESULTS_DIR / "fastqc"
+RAW_FASTQC_DIR = RESULTS_DIR / "fastqc/raw"
 LOGS_DIR = SO_DIR / "logs"
 
 # --------------------------

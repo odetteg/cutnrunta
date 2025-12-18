@@ -10,7 +10,7 @@ FASQC_QC_FASTP_DIR: "/shared/projects/cutnrunta/so_/results/fastqc/trim/fastp"
 
 
 fastp_trim:
-  extra: "-q 15 -l 36"
+  extra: "--length_required 30 --qualified_quality_phred 20 --unqualified_percent_limit 20 --trim_poly_g --poly_g_min_len 10 --correction --detect_adapter_for_pe --cut_tail --cut_tail_window_size 4 --cut_tail_mean_quality 20"
 resources:
   multiqc:
     cpu: 4
