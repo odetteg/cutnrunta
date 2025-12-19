@@ -53,6 +53,7 @@ def build_sample_metadata(samples_df):
     """
     df = samples_df.copy()
     df["basename"] = df["filename"].apply(lambda x: Path(x).name)
+    
     def detect_read(filename):
         if "_R1" in filename:
             return "R1"
@@ -62,8 +63,6 @@ def build_sample_metadata(samples_df):
             return "Unknown"
 
     df["read"] = df["basename"].apply(detect_read)
-
- 
     df["pair_id"] = df["basename"].apply(lambda x: re.sub(r"_R[12]_\d+.*$", "", x))
 
     sample_metadata = (
@@ -79,8 +78,8 @@ def build_sample_metadata(samples_df):
 
     sample_metadata = sample_metadata.set_index("sample_id")
     
-
     return sample_metadata
+
 
 sample_metadata = build_sample_metadata(samples_df)
 
@@ -106,8 +105,5 @@ def get_paired_rds(sample_id, sample_metadata=sample_metadata, raw_data_dir=RAW_
         os.path.join(raw_data_dir, rev)
     )
 
-base_ids = sample_metadata.index.tolist()
 
-for b in base_ids:
-    fwd, rev = get_paired_rds(b)
-    print(b, fwd, rev)
+base_ids = sample_metadata.index.tolist()

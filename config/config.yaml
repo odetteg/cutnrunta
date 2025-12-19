@@ -1,20 +1,34 @@
 ---
 snakefile: snakefile
-RAW_DATA_DIR: "/shared/projects/cutnrunta/so_/data_cp/data/Séquençage-2025_11_13"
+RAW_DATA_DIR: "/shared/projects/cutnrunta/so_/data_cp/data/sequenced_2025_11_13"
 REF_DIR: "/shared/projects/cutnrunta/so_/Ref_genome"
 SO_DIR: "/shared/projects/cutnrunta/so_"
 RESULTS_DIR: "/shared/projects/cutnrunta/so_/results"
 FASTP_TRIMMED_DIR: "/shared/projects/cutnrunta/so_/results/trim/fastp"
 FASTP_QC_REPORTS_DIR: "/shared/projects/cutnrunta/so_/results/qc/fastp"
-FASQC_QC_FASTP_DIR: "/shared/projects/cutnrunta/so_/results/fastqc/trim/fastp"
+FASTQC_QC_FASTP_DIR: "/shared/projects/cutnrunta/so_/results/fastqc/trim/fastp"
 
+BT9_TA_REF_FA: "/shared/projects/cutnrunta/so_/Ref_genome/BT9_TA_prefixed.fna"
 
 fastp_trim:
-  extra: "--length_required 30 --qualified_quality_phred 20 --unqualified_percent_limit 20 --trim_poly_g --poly_g_min_len 10 --correction --detect_adapter_for_pe --cut_tail --cut_tail_window_size 4 --cut_tail_mean_quality 20"
+  extra: "-q 15 -l 20 --trim_poly_g --correction"
+  a: AGATCGGAAGAGCACACGTCTGAACTCCAGTCA
+  r2_adapter: AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
+multiqc:
+  extra: "--fullnames --ai-summary-full"
+
 resources:
-  multiqc:
-    cpu: 4
-    time: 60
   fastp_trim:
     cpu: 8
-    time: 60
+    mem_mb: 32 
+    time: "01:00:00" 
+
+  bt2_build_index:
+    cpu: 16
+    mem_mb: 32 
+    time: "02:00:00"  
+
+  multiqc:
+    cpu: 4
+    mem_mb: 8
+    time: "00:30:00"   

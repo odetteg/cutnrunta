@@ -47,6 +47,8 @@ rule fastp_trim:
         json=config["FASTP_QC_REPORTS_DIR"] + "/{base_id}.fastp.json",
     params:
         extras=config["fastp_trim"]["extra"],
+        a=config["fastp_trim"]["a"],
+        r2_adapter=config["fastp_trim"]["r2_adapter"],
     resources:
         cpu=config["resources"]["fastp_trim"]["cpu"],
     log:
@@ -60,6 +62,8 @@ rule fastp_trim:
             -o {output.trim_r1} -O {output.trim_r2} \
             -h {output.html} -j {output.json} \
             --thread {resources.cpu} \
+            -a {params.a} \
+            --adapter_sequence_r2 {params.r2_adapter} \
             {params.extras} \
             > {log.std_out} 2> {log.std_err}
         """
@@ -72,14 +76,14 @@ rule post_trim_fqc:
             f"{wc.base_id}.fastp.trimmed.{wc.read}.fastq.gz",
         ),
     output:
-        html=config["FASQC_QC_FASTP_DIR"]
+        html=config["FASTQC_QC_FASTP_DIR"]
         + "/{base_id}.fastp.trimmed.{read}_fastqc.html",
-        zip=config["FASQC_QC_FASTP_DIR"] + "/{base_id}.fastp.trimmed.{read}_fastqc.zip",
+        zip=config["FASTQC_QC_FASTP_DIR"] + "/{base_id}.fastp.trimmed.{read}_fastqc.zip",
     log:
         std_out=str(LOGS_DIR) + "/{base_id}.fastqc.fastp.trimmed.{read}.out.log",
         std_err=str(LOGS_DIR) + "/{base_id}.fastqc.fastp.trimmed.{read}.err.log",
     params:
-        out_dir=config["FASQC_QC_FASTP_DIR"],
+        out_dir=config["FASTQC_QC_FASTP_DIR"],
     resources:
         cpus=4,
     shell:
@@ -104,7 +108,7 @@ rule multiqc:
             base_id=base_ids,
         ),
         fqc_fastp_trimm_rpts=expand(
-            config["FASQC_QC_FASTP_DIR"]
+            config["FASTQC_QC_FASTP_DIR"]
             + "/{base_id}.fastp.trimmed.{read}_fastqc.{ext}",
             base_id=base_ids,
             read=["R1", "R2"],
@@ -114,6 +118,7 @@ rule multiqc:
         multqc_rpt=RESULTS_DIR / "qc/multiqc/multiqc.html",
     params:
         mqc_dir=RESULTS_DIR / "qc/multiqc",
+        extra=config["multiqc"]["extra"],
     threads: config["resources"]["multiqc"]["cpu"]
     log:
         std_out="logs/multiqc/multiqc.out.log",
@@ -122,7 +127,7 @@ rule multiqc:
         """
         module load -f multiqc/1.29
         mkdir -p {params.mqc_dir} logs/multiqc
-        multiqc --force \
+        multiqc --force {params.extra} \
                 --outdir {params.mqc_dir} \
                 -n multiqc.html \
                 {input} \
