@@ -2,7 +2,7 @@ rule bt2_build_index:
     input:
         ref_genome=config["BT9_TA_REF_FA"]
     output:
-        multiext(
+       idx=multiext(
             config["BT9_TA_REF_FA"],
             ".1.bt2",
             ".2.bt2",

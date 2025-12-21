@@ -8,14 +8,30 @@ FASTP_TRIMMED_DIR: "/shared/projects/cutnrunta/so_/results/trim/fastp"
 FASTP_QC_REPORTS_DIR: "/shared/projects/cutnrunta/so_/results/qc/fastp"
 FASTQC_QC_FASTP_DIR: "/shared/projects/cutnrunta/so_/results/fastqc/trim/fastp"
 
+dir_names:
+  bt2_raw_map_dir: "/shared/projects/cutnrunta/so_/results/map/raw"
+  temp_sort_dir: "/shared/projects/cutnrunta/so_/results/map/temp"
+  samtools_sorted_filtered_dir: "/shared/projects/cutnrunta/so_/results/map/filtered_sorted"
+  sorted_filtered_stats_dir: "/shared/projects/cutnrunta/so_/results/map/filtered_sorted_stats"
+
 BT9_TA_REF_FA: "/shared/projects/cutnrunta/so_/Ref_genome/BT9_TA_prefixed.fna"
 
 fastp_trim:
-  extra: "-q 15 -l 20 --trim_poly_g --correction"
+  extra: "-q 15 -l 20 --correction"
   a: AGATCGGAAGAGCACACGTCTGAACTCCAGTCA
   r2_adapter: AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
 multiqc:
   extra: "--fullnames --ai-summary-full"
+map:
+  min_len: 10
+  max_len: 700
+  MAPQ_cutoff: 5
+  extra: "--local --very-sensitive-local --soft-clipped-unmapped-tlen --dovetail --phred33" 
+bam_sort:
+  extra: ""
+bam_filter:
+  extra: "-q 10 -f 2"
+
 
 resources:
   fastp_trim:
@@ -32,3 +48,15 @@ resources:
     cpu: 4
     mem_mb: 8
     time: "00:30:00"   
+  map:
+    cpu: 10
+    time: 120
+  bam_sort:
+    cpu: 8
+    mem_mb: 8000
+  bam_filter:
+    cpu: 8
+    mem_mb: 2000
+  samtools_idx:
+    cpu: 8
+

@@ -9,6 +9,8 @@ configfile: "config/config.yaml"
 
 include: "workflows/rules/qc.smk"
 include: "workflows/rules/idx.smk"
+include: "workflows/rules/map.smk"
+include: "workflows/rules/multiqc.smk"
 
 
 rule all:
@@ -45,4 +47,14 @@ rule all:
             ".rev.2.bt2",
         ),
         fai=config["BT9_TA_REF_FA"] + ".fai",
+        raw_bt2_mapped=expand(
+            config["dir_names"]["bt2_raw_map_dir"]
+            + "/{base_id}.raw.unsorted.unfiltered.bam",
+            base_id=base_ids,
+        ),
+        sorted_filtered_bam=expand(
+            config["dir_names"]["samtools_sorted_filtered_dir"]
+            + "/{base_id}.sorted.filtered.bam",
+            base_id=base_ids,
+        ),
         multiqc_rpt=RESULTS_DIR / "qc/multiqc/multiqc.html",
