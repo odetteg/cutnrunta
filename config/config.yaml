@@ -14,6 +14,7 @@ dir_names:
   samtools_sorted_filtered_dir: "/shared/projects/cutnrunta/so_/results/map/filtered_sorted"
   sorted_filtered_stats_dir: "/shared/projects/cutnrunta/so_/results/map/filtered_sorted_stats"
 
+
 BT9_TA_REF_FA: "/shared/projects/cutnrunta/so_/Ref_genome/BT9_TA_prefixed.fna"
 
 fastp_trim:

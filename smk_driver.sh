@@ -10,9 +10,11 @@
 #SBATCH --output=master_%j.out
 #SBATCH --error=master_%j.err
 
-module load snakemake
+module load snakemake/8.9.0
 
 snakemake --snakefile snakefile \
     --cores $SLURM_CPUS_PER_TASK \
+    --use-conda \
+    --conda-frontend conda \
     --latency-wait 60 \
-    --rerun-incomplete \
+    --rerun-incomplete

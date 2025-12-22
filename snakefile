@@ -11,6 +11,7 @@ include: "workflows/rules/qc.smk"
 include: "workflows/rules/idx.smk"
 include: "workflows/rules/map.smk"
 include: "workflows/rules/multiqc.smk"
+include: "workflows/rules/plots.smk"
 
 
 rule all:
@@ -57,4 +58,8 @@ rule all:
             + "/{base_id}.sorted.filtered.bam",
             base_id=base_ids,
         ),
+        agg_stats_csv=agg_stats_csv,
+        samtools_txt=samtools_txt,
+        frag_len_dst_pdf=frag_len_dst_pdf,
+        frag_len_dst_facet_pdf=frag_len_dst_facet_pdf,
         multiqc_rpt=RESULTS_DIR / "qc/multiqc/multiqc.html",
