@@ -1,0 +1,123 @@
+---
+snakefile: snakefile
+
+#Define how the replicates appear in the file paths
+reps:
+  rep1: -1
+  rep2: -2
+genome: "BT9_TA"
+
+# General workflow params
+controls:
+  antibodies:
+    - IgG
+
+rmv_MT_seqs: 
+  mt_threshold: 0.0
+  MT_seq: "BT_NC_006853.1"
+
+
+
+# Parameters for tools
+fastp_trim:
+  extra: "-q 15 -l 20 --correction"
+  a: AGATCGGAAGAGCACACGTCTGAACTCCAGTCA
+  r2_adapter: AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
+multiqc:
+  extra: "--fullnames --ai-summary-full"
+map:
+  min_len: 10
+  max_len: 700
+  MAPQ_cutoff: 5
+  extra: "--local --very-sensitive-local --soft-clipped-unmapped-tlen --dovetail --phred33" 
+bam_sort:
+  extra: ""
+bam_filter:
+  extra: "-q 10 -f 2"
+picard:
+  rmv_duplicates: true
+  extra: "--ASSUME_SORT_ORDER=coordinate"
+deeptools:
+  binsize: 20
+  normalization: "RPGC"
+  scale_factor_method: "None"
+  operation: "log2"
+  rmv_MT_seqs: ""
+  extra: ""
+  multibigwigsummary:
+    extra: ""
+  plotpca:
+    extra: ""
+  plotfingerprint:
+    extra: "--centerReads"
+  bamcompare:
+    binsize: 20
+    extra: "--skipZeroOverZero --verbose"
+    normalization: "RPKM"
+mosdepth:
+  binSize: 10000
+peaks_call:
+  seacr:
+    use_seacr: true
+    peak_threshold: 0.01
+    use_control: true # default behaviour. IF set to false, Runs without any control like IgG, hence does not do normolization.
+    filter_threshold: 5
+  macs3:
+    use_macs3: true
+    use_control: false
+    broad: true # If set to "False", runs narrow peaks calls. Set to ""true" for broad.
+    qvalue: 0.05
+    broad_cutoff: 0.1
+    extra: ""
+
+# Resources by tool
+resources:
+  fastp_trim:
+    cpu: 8
+    mem_mb: 32 
+    time: "01:00:00" 
+
+  bt2_build_index:
+    cpu: 16
+    mem_mb: 32 
+    time: "02:00:00"  
+
+  multiqc:
+    cpu: 4
+    mem_mb: 8
+    time: "00:30:00"   
+  map:
+    cpu: 10
+    time: 120
+  bam_sort:
+    cpu: 8
+    mem_mb: 8000
+  bam_filter:
+    cpu: 8
+    mem_mb: 2000
+  samtools_idx:
+    cpu: 8
+  samtools:
+    cpu : 8
+  mosdepth:
+    cpu: 8
+  deeptools:
+    cpu: 8
+  unique-kmers:
+    mem_mb: 24GB
+    cpu: 8
+  macs3:
+    cpu: 8
+  bam:
+    cpu: 8
+  chipseeker:
+    cpu: 8
+    mem_mb: 32GB
+    time: "02:00:00"
+
+# Annotation modifications
+chipseeker_annotation:
+  annotate_raw_wcontrol: true
+  annotate_raw_nocontrol: true
+  upstream: 3000
+  downstream: 3000

@@ -1,0 +1,14 @@
+name: deeptools
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.9
+  - khmer=3.0.0a3
+  - deeptools=3.5.5
+  - wiggletools
+  - libbigwig    
+  - pyyaml
+  - pandas
+  - ucsc-wigtobigwig

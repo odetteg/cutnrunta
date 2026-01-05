@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Session genome="D:\cutnrunta\Ref_genome\BT9_TA_prefixed.fna" locus="BT_NC_037346.1:14507139-14517888" version="8">
+    <Resources>
+        <Resource path="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\BL3-H3K27ac-1_S4_L001.relaxed.bed" type="bed"/>
+        <Resource path="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\TBL3-H2K119Ub-1_S13_L001.relaxed.bed" type="bed"/>
+        <Resource path="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\BL3-H2K119Ub-1_S6_L001.relaxed.bed" type="bed"/>
+        <Resource path="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\TBL3-H3K27ac-1_S11_L001.relaxed.bed" type="bed"/>
+        <Resource path="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\TBL3-H3K27me3-1_S9_L001.relaxed.bed" type="bed"/>
+        <Resource path="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\BL3-H3K27me3-2_S3_L001.relaxed.bed" type="bed"/>
+        <Resource path="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\BL3-H3K27ac-2_S5_L001.relaxed.bed" type="bed"/>
+        <Resource path="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\TBL3-H3K27me3-2_S10_L001.relaxed.bed" type="bed"/>
+        <Resource path="D:\cutnrunta\Ref_genome\BT9_TA_fused.gtf" type="gtf"/>
+        <Resource path="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\TBL3-H3K27ac-2_S12_L001.relaxed.bed" type="bed"/>
+        <Resource path="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\BL3-H2K119Ub-2_S7_L001.relaxed.bed" type="bed"/>
+        <Resource path="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\TBL3-H2K119Ub-2_S14_L001.relaxed.bed" type="bed"/>
+        <Resource path="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\BL3-H3K27me3-1_S2_L001.relaxed.bed" type="bed"/>
+    </Resources>
+    <Panel height="539" name="FeaturePanel" width="1117">
+        <Track attributeKey="Reference sequence" clazz="org.broad.igv.track.SequenceTrack" fontSize="10" id="Reference sequence" name="Reference sequence" sequenceTranslationStrandValue="+" shouldShowTranslation="false" visible="true"/>
+        <Track attributeKey="BT9_TA_fused.gtf" clazz="org.broad.igv.track.FeatureTrack" colorScale="ContinuousColorScale;0.0;13752.0;255,255,255;0,0,178" fontSize="10" groupByStrand="false" id="D:\cutnrunta\Ref_genome\BT9_TA_fused.gtf" name="BT9_TA_fused.gtf" visible="true"/>
+        <Track attributeKey="BL3-H2K119Ub-1_S6_L001.relaxed.bed" clazz="org.broad.igv.track.FeatureTrack" colorScale="ContinuousColorScale;0.0;186.0;255,255,255;0,0,178" fontSize="10" groupByStrand="false" id="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\BL3-H2K119Ub-1_S6_L001.relaxed.bed" name="BL3-H2K119Ub-1_S6_L001.relaxed.bed" visible="true"/>
+        <Track attributeKey="BL3-H2K119Ub-2_S7_L001.relaxed.bed" clazz="org.broad.igv.track.FeatureTrack" colorScale="ContinuousColorScale;0.0;165.0;255,255,255;0,0,178" fontSize="10" groupByStrand="false" id="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\BL3-H2K119Ub-2_S7_L001.relaxed.bed" name="BL3-H2K119Ub-2_S7_L001.relaxed.bed" visible="true"/>
+        <Track attributeKey="BL3-H3K27ac-1_S4_L001.relaxed.bed" clazz="org.broad.igv.track.FeatureTrack" colorScale="ContinuousColorScale;0.0;117.0;255,255,255;0,0,178" fontSize="10" groupByStrand="false" id="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\BL3-H3K27ac-1_S4_L001.relaxed.bed" name="BL3-H3K27ac-1_S4_L001.relaxed.bed" visible="true"/>
+        <Track attributeKey="BL3-H3K27ac-2_S5_L001.relaxed.bed" clazz="org.broad.igv.track.FeatureTrack" colorScale="ContinuousColorScale;0.0;63.0;255,255,255;0,0,178" fontSize="10" groupByStrand="false" id="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\BL3-H3K27ac-2_S5_L001.relaxed.bed" name="BL3-H3K27ac-2_S5_L001.relaxed.bed" visible="true"/>
+        <Track attributeKey="BL3-H3K27me3-1_S2_L001.relaxed.bed" clazz="org.broad.igv.track.FeatureTrack" colorScale="ContinuousColorScale;0.0;98.0;255,255,255;0,0,178" fontSize="10" groupByStrand="false" id="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\BL3-H3K27me3-1_S2_L001.relaxed.bed" name="BL3-H3K27me3-1_S2_L001.relaxed.bed" visible="true"/>
+        <Track attributeKey="BL3-H3K27me3-2_S3_L001.relaxed.bed" clazz="org.broad.igv.track.FeatureTrack" colorScale="ContinuousColorScale;0.0;139.0;255,255,255;0,0,178" fontSize="10" groupByStrand="false" id="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\BL3-H3K27me3-2_S3_L001.relaxed.bed" name="BL3-H3K27me3-2_S3_L001.relaxed.bed" visible="true"/>
+        <Track attributeKey="TBL3-H2K119Ub-1_S13_L001.relaxed.bed" clazz="org.broad.igv.track.FeatureTrack" colorScale="ContinuousColorScale;0.0;567.0;255,255,255;0,0,178" fontSize="10" groupByStrand="false" id="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\TBL3-H2K119Ub-1_S13_L001.relaxed.bed" name="TBL3-H2K119Ub-1_S13_L001.relaxed.bed" visible="true"/>
+        <Track attributeKey="TBL3-H2K119Ub-2_S14_L001.relaxed.bed" clazz="org.broad.igv.track.FeatureTrack" colorScale="ContinuousColorScale;0.0;462.0;255,255,255;0,0,178" fontSize="10" groupByStrand="false" id="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\TBL3-H2K119Ub-2_S14_L001.relaxed.bed" name="TBL3-H2K119Ub-2_S14_L001.relaxed.bed" visible="true"/>
+        <Track attributeKey="TBL3-H3K27ac-1_S11_L001.relaxed.bed" clazz="org.broad.igv.track.FeatureTrack" colorScale="ContinuousColorScale;0.0;2.0;255,255,255;0,0,178" fontSize="10" groupByStrand="false" id="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\TBL3-H3K27ac-1_S11_L001.relaxed.bed" name="TBL3-H3K27ac-1_S11_L001.relaxed.bed" visible="true"/>
+        <Track attributeKey="TBL3-H3K27ac-2_S12_L001.relaxed.bed" clazz="org.broad.igv.track.FeatureTrack" colorScale="ContinuousColorScale;0.0;1.0;255,255,255;0,0,178" fontSize="10" groupByStrand="false" id="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\TBL3-H3K27ac-2_S12_L001.relaxed.bed" name="TBL3-H3K27ac-2_S12_L001.relaxed.bed" visible="true"/>
+        <Track attributeKey="TBL3-H3K27me3-1_S9_L001.relaxed.bed" clazz="org.broad.igv.track.FeatureTrack" colorScale="ContinuousColorScale;0.0;162.0;255,255,255;0,0,178" fontSize="10" groupByStrand="false" id="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\TBL3-H3K27me3-1_S9_L001.relaxed.bed" name="TBL3-H3K27me3-1_S9_L001.relaxed.bed" visible="true"/>
+        <Track attributeKey="TBL3-H3K27me3-2_S10_L001.relaxed.bed" clazz="org.broad.igv.track.FeatureTrack" colorScale="ContinuousColorScale;0.0;361.0;255,255,255;0,0,178" fontSize="10" groupByStrand="false" id="D:\cutnrunta\seacr\raw\peaks_wcontrol\relaxed\TBL3-H3K27me3-2_S10_L001.relaxed.bed" name="TBL3-H3K27me3-2_S10_L001.relaxed.bed" visible="true"/>
+    </Panel>
+    <PanelLayout dividerFractions="0.01090909090909091"/>
+    <HiddenAttributes>
+        <Attribute name="DATA FILE"/>
+        <Attribute name="DATA TYPE"/>
+        <Attribute name="NAME"/>
+    </HiddenAttributes>
+</Session>

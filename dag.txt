@@ -1,0 +1,46 @@
+ctr_abd_ids: ['BL3-IgG', 'TBL3-IgG']
+Full Traceback (most recent call last):
+  File "/home/godette/miniconda3/envs/cut_snake/lib/python3.13/site-packages/snakemake/cli.py", line 2105, in args_to_api
+    dag_api = workflow_api.dag(
+        dag_settings=DAGSettings(
+    ...<17 lines>...
+        ),
+    )
+  File "/home/godette/miniconda3/envs/cut_snake/lib/python3.13/site-packages/snakemake/api.py", line 344, in dag
+    return DAGApi(
+        self.snakemake_api,
+        self,
+        dag_settings=dag_settings,
+    )
+  File "<string>", line 6, in __init__
+  File "/home/godette/miniconda3/envs/cut_snake/lib/python3.13/site-packages/snakemake/api.py", line 449, in __post_init__
+    self.workflow_api._workflow.dag_settings = self.dag_settings
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/godette/miniconda3/envs/cut_snake/lib/python3.13/site-packages/snakemake/api.py", line 396, in _workflow
+    workflow.include(
+    ~~~~~~~~~~~~~~~~^
+        self.snakefile, overwrite_default_target=True, print_compilation=False
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/godette/miniconda3/envs/cut_snake/lib/python3.13/site-packages/snakemake/workflow.py", line 1651, in include
+    exec(
+    ~~~~^
+        compile(code, snakefile.get_path_or_uri(secret_free=False), "exec"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.globals,
+        ^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/d/cutnrunta/Snakefile", line 51, in <module>
+  File "/home/godette/miniconda3/envs/cut_snake/lib/python3.13/site-packages/snakemake/workflow.py", line 1652, in include
+    compile(code, snakefile.get_path_or_uri(secret_free=False), "exec"),
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/d/cutnrunta/constants/common.smk", line 67
+    ),
+SyntaxError: invalid syntax
+
+SyntaxError in file "/mnt/d/cutnrunta/constants/common.smk", line 67:
+invalid syntax:
+        ),
+

@@ -1,0 +1,21 @@
+# Reference and tool output directories
+Ref_genome/
+seacr/
+macs3/
+bigwig/
+bedtools/
+bedgraph_bw/
+
+# Ignore common large data formats often found in pipelines
+*.fastq
+*.bam
+*.sam
+*.vcf
+*.gz
+
+# Ignore temporary or hidden system files
+.DS_Store
+__pycache__/
+
+# Raw / copied data
+data_cp/
