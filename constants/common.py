@@ -224,21 +224,20 @@ design_df["gen_abd"] = design_df["cell_line"] + "-" + design_df["antibody"]
 #     .rename(columns={1: "rep1", 2: "rep2"})
 #     .reset_index()
 # )
-rep_df = (
-    temp_peak_idf.pivot(index="gen_abd", columns="replicate", values="base_id")
-    .reset_index()
-)
+rep_df = temp_peak_idf.pivot(
+    index="gen_abd", columns="replicate", values="base_id"
+).reset_index()
 
 gen_abd_ids: list = rep_df["gen_abd"].tolist()
 ctr_abd_ids = design_df.query("condition == 'control'")["gen_abd"].tolist()
 tt_base_ids = design_df.query("condition == 'treatment'")["base_id"].tolist()
 
+
 def get_reps(gen_abd_id: str, rep_df=rep_df) -> tuple:
     row = rep_df.loc[rep_df["gen_abd"] == gen_abd_id]
     if row.empty:
         raise ValueError(f"Warning!: {gen_abd_id} not found in rep_df")
-    return tuple(row[["1", "2"]].iloc[0])  
-
+    return tuple(row[["1", "2"]].iloc[0])
 
 
 def get_control_id(gen_abd_id: str) -> str:
@@ -248,6 +247,17 @@ def get_control_id(gen_abd_id: str) -> str:
         "gen_abd"
     ].values[0]
     return control_id
+
+
+def get_treatment_id(gen_abd_id: str) -> str:
+    """Get treatment sample ID for given control sample."""
+    cell_line = design_df.loc[design_df.gen_abd == gen_abd_id, "cell_line"].values[0]
+
+    treatment_id = design_df.query(
+        'condition == "treatment" and cell_line == @cell_line'
+    )["gen_abd"].values[0]
+
+    return treatment_id
 
 
 def get_ctrl_merged_bam(gen_abd_id: str) -> Path:
@@ -280,23 +290,111 @@ def get_ctrl_deduped_bai(ctr_abd_id: str) -> Path:
     return mark_remove_dups / f"{get_merge_control_id(ctr_abd_id)}.deduped.bam.bai"
 
 
+def get_tt_bam(sample_id):
+    return mark_remove_dups / f"{sample_id}.deduped.bam"
 
 
-# print(get_ctrl_merged_bam("TBL3-H2K119Ub"))
-# print(design_df.query("condition == 'treatment'")["base_id"].tolist())
-# print(design_df)
-# print(get_reps("TBL3-H2K119Ub"))
-# print(design_df.query("condition == 'control'")["gen_abd"].tolist())
-# print(design_df["base_id"].str.contains("TBL3-H2K119Ub"))
-# print(design_df.query("condition == 'treatment'")["base_id"])
-# print(gen_abd_ids)
-# print(f"ctr_abd_ids: {ctr_abd_ids}")
-# print(get_ctrl_merged_bam("TBL3-H2K119Ub"))
-# print(design_df.query("condition == 'treatment'")["base_id"])
-# print(design_df.query("condition == 'treatment'")["gen_abd"].tolist())
-# print(gen_abd_ids)
-# print(design_df)
-# for id in gen_abd_ids:
-#     print(f"{id}: {get_ctrl_merged_bam(id)}")
-# print(tt_base_ids)
-# print("ID overlap:", set(tt_base_ids) & set(gen_abd_ids))
+def get_tt_deduped_bai(tt_abd_id: str) -> Path:
+    """Get deduped BAM path for treatment sample."""
+    return mark_remove_dups / f"{get_treatment_id(tt_abd_id)}.deduped.bam.bai"
+
+
+def is_tt_id(tt_abd_id: str) -> bool:
+    """Check if the given gen_abd_id is a treatment sample."""
+    return tt_abd_id in tt_base_ids
+
+
+def is_ctr_id(ctr_abd_id: str) -> bool:
+    """Check if the given gen_abd_id is a control sample."""
+    return ctr_abd_id in ctr_abd_ids
+
+
+diffbind_df = design_df[design_df["condition"] == "treatment"].copy()
+
+
+# these adjustments are for are relevant to diffbind.R script
+# design_df["deduped_bam"] = design_df.apply(
+#     lambda row: (
+#         get_ctrl_bam(row["base_id"])
+#         if row["condition"] == "control"
+#         else get_tt_bam(row["base_id"])
+#     ),
+#     axis=1,
+# )
+
+diffbind_df["relaxed_peak_files"] = (
+    dynamic_unfiltered_seacr_dir / "relaxed" / (diffbind_df["base_id"] + ".relaxed.bed")
+)
+diffbind_df["stringent_peak_files"] = (
+    dynamic_unfiltered_seacr_dir / "stringent" / (diffbind_df["base_id"] + ".stringent.bed")
+)
+diffbind_df["bamReads"] = mark_remove_dups / (diffbind_df["base_id"] + ".deduped.bam")
+
+diffbind_df["bamControl"] = diffbind_df.apply(
+    lambda row: get_ctrl_bam(row["base_id"]), axis=1
+)
+diffbind_df["ControlID"] = diffbind_df.apply(
+    lambda row: get_control_id(row["gen_abd"]), axis=1
+)
+ad_files.mkdir(
+    parents=True, exist_ok=True
+)  # Included this becasue snakeamke cried the folder does exist at dry --run
+
+
+(
+    diffbind_df[
+        [
+            "base_id",
+            "cell_line",
+            "antibody",
+            "replicate",
+            "bamReads",
+            "bamControl",
+            "ControlID",
+            "relaxed_peak_files",
+        ]
+    ]
+    .rename(
+        columns={
+            "base_id": "SampleID",
+            "cell_line": "Condition",
+            "antibody": "Factor",
+            "replicate": "Replicate",
+            "relaxed_peak_files": "Peaks",
+        }
+    )
+    .assign(Tissue="Bcell", PeakCaller="bed")
+    .to_csv(ad_files / "relaxed_sample_sheet.csv", index=False)
+)
+
+(
+    diffbind_df[
+        [
+            "base_id",
+            "cell_line",
+            "antibody",
+            "replicate",
+            "bamReads",
+            "bamControl",
+            "ControlID",
+            "stringent_peak_files",
+        ]
+    ]
+    .rename(
+        columns={
+            "base_id": "SampleID",
+            "cell_line": "Condition",
+            "antibody": "Factor",
+            "replicate": "Replicate",
+            "stringent_peak_files": "Peaks",
+        }
+    )
+    .assign(Tissue="Bcell", PeakCaller="bed")
+    .to_csv(ad_files / "stringent_sample_sheet.csv", index=False)
+)
+# print(get_ctrl_deduped_bam("TBL3-H2K119Ub"))
+# print(is_tt_id("BL3-H2K119Ub-1_S6_L001"))
+# # print(is_ctr_id("TBL3-IgG"))
+# print(diffbind_df)
+
+tt_ids = design_df.query("condition == 'treatment'")["base_id"].tolist()

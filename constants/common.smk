@@ -41,7 +41,7 @@ def targets():
             ".rev.1.bt2",
             ".rev.2.bt2",
         ),
-        [str(BT9_TA_REF_FA) + ".fai"],
+        str(BT9_TA_REF_FA) + ".fai",
         # Mapping outputs
         expand(
             bt2_raw_map_dir / "{base_id}.raw.unsorted.unfiltered.bam",
@@ -51,19 +51,13 @@ def targets():
             samtools_sorted_filtered_dir / "{base_id}.sorted.filtered.bam",
             base_id=base_ids,
         ),
+        # Merged BAMs
         expand(
-            merged_bam_dir / "treatment/{gen_abd_id}.merged.bam", gen_abd_id=gen_abd_ids
-        ),
-        expand(
-            merged_bam_dir / "treatment/{gen_abd_id}.merged.bam.bai",
+            merged_bam_dir / "treatment/{gen_abd_id}.merged.bam",
             gen_abd_id=gen_abd_ids,
         ),
         expand(
-            bamCompare / "per_replicate/{base_id}.bw",
-            base_id=tt_base_ids,
-        ),
-        expand(
-            bamCompare / "merged/{gen_abd_id}.merged.bw",
+            merged_bam_dir / "treatment/{gen_abd_id}.merged.bam.bai",
             gen_abd_id=gen_abd_ids,
         ),
         expand(
@@ -74,23 +68,14 @@ def targets():
             merged_bam_dir / "control/{ctr_abd_id}.merged.bam.bai",
             ctr_abd_id=ctr_abd_ids,
         ),
-        [analysis_dir / "h3k27ac" / "ac_lost_in_tbl3.bed"],
-        [analysis_dir / "h3k27me3" / "me_gained_in_tbl3.bed"],
-        [analysis_dir / "h3k27_transition" / "ac_to_me_in_tbl3.bed"],
-        # Aggregated stats
-        [agg_stats_csv],
-        [samtools_txt],
-        # Fragment length plots
-        [frag_len_dst_pdf],
-        [frag_len_dst_facet_pdf],
-        # Samtools stats
+        # bamCompare
         expand(
-            sorted_filtered_stats_dir / "{base_id}.stats.txt",
-            base_id=base_ids,
+            bamCompare / "per_replicate/{base_id}.bw",
+            base_id=tt_base_ids,
         ),
         expand(
-            sorted_filtered_stats_dir / "{base_id}.flagstats.txt",
-            base_id=base_ids,
+            bamCompare / "merged/{gen_abd_id}.merged.bw",
+            gen_abd_id=gen_abd_ids,
         ),
         # Deduplication
         expand(
@@ -98,120 +83,203 @@ def targets():
             base_id=base_ids,
         ),
         expand(
-            stats_dir / "picard/{base_id}.dedup.metrics.txt",
-            base_id=base_ids,
-        ),
-        expand(
             mark_remove_dups / "{base_id}.deduped.bam.bai",
             base_id=base_ids,
         ),
-        # idxstats
         expand(
-            stats_dir / "samtools/{base_id}.BT9_TA.dedupped.idxstats.txt",
+            stats_dir / "picard/{base_id}.dedup.metrics.txt",
             base_id=base_ids,
         ),
-        # Mosdepth
+        # bedtools fragments
         expand(
-            stats_dir / "mosdepth/{base_id}.{ext}",
-            base_id=base_ids,
-            ext=["mosdepth.global.dist.txt", "regions.bed.gz"],
-        ),
-        # EGS
-        [BASE_DIR / "ad_files/egs.json"],
-        [sample_egs_csv],
-        # BigWigs
-        expand(
-            bw_dir / "replicate_bw/{base_id}.bw",
+            RESULTS_DIR / "bedtools/{base_id}.fragments.bedgraph",
             base_id=base_ids,
         ),
-        expand(QC_DIR / "MT_seq/{base_id}.txt", base_id=base_ids),
+        # MultiQC
+        RESULTS_DIR / "qc/multiqc/multiqc.html",
         expand(
             bw_dir / "average_bw/{cell_line}_{antibody}.bw",
             cell_line=cell_lines,
             antibody=antibodies,
         ),
-        # deepTools: bins + PCA
-        [deeptools_dir / "scores_per_bin.npz"],
-        [deeptools_dir / "pca.tab"],
-        expand(bw_dir / "bedgraph_bw/{base_id}.bw", base_id=base_ids),
-        # Fragment length tables
-        [plots / "deeptools/fragment_lengths.pdf"],
-        # Fingerprints
-        [plots / "deeptools/fingerprint.pdf"],
-        [deeptools_dir / "qc/fingerprints.tsv"],
-        # deepTools: multiBigwigSummary
-        [deeptools_dir / "qc/scores_per_bin.csv"],
-        # Fragment length tables
-        [deeptools_dir / "qc/fragment_lengths.tsv"],
-        [deeptools_dir / "qc/fragment_lengths_raw.tsv"],
-        # bedtools
-        expand(RESULTS_DIR / "bedtools/{base_id}.fragments.bedgraph", base_id=base_ids),
-        # MultiQC
-        [RESULTS_DIR / "qc/multiqc/multiqc.html"],
     ]
 
+    # --------------------------
     # Conditional MACS3 peaks
+    # --------------------------
     if config["peaks_call"]["macs3"]["use_macs3"]:
-        if not config["peaks_call"]["macs3"]["broad"]:
+        if config["peaks_call"]["macs3"]["broad"]:
             TARGETS.extend(
                 expand(
-                    macs3_dir / "narrow/peaks/{sample_id}_peaks.narrowPeak",
-                    sample_id=design_df.query("condition == 'treatment'")["base_id"],
+                    macs3_dir / "broad/peaks/{sample_id}_peaks.broadPeak",
+                    sample_id=tt_ids,
                 )
             )
         else:
             TARGETS.extend(
                 expand(
-                    macs3_dir / "broad/peaks/{sample_id}_peaks.broadPeak",
-                    sample_id=design_df.query("condition == 'treatment'")["base_id"],
+                    macs3_dir / "narrow/peaks/{sample_id}_peaks.narrowPeak",
+                    sample_id=tt_ids,
                 )
             )
 
+    # --------------------------
     # Conditional SEACR peaks
+    # (treatment-only by construction)
+    # --------------------------
     if config["peaks_call"]["seacr"]["use_seacr"]:
         TARGETS.extend(
             expand(
                 dynamic_unfiltered_seacr_dir / "{mode}/{sample_id}.{mode}.bed",
                 mode=seacr_modes,
-                sample_id=design_df.query("condition=='treatment'")["base_id"],
+                sample_id=tt_ids,
             )
-            + expand(
+        )
+
+        TARGETS.extend(
+            expand(
                 dynamic_unfiltered_seacr_dir / "qc/prefiltered_counts.{mode}.{ext}",
                 mode=seacr_modes,
                 ext=["txt", "hist.txt"],
             )
-            + expand(
+        )
+
+        TARGETS.extend(
+            expand(
                 dynamic_filtered_seacr_dir / "{mode}/{peak_id}.filtered.{mode}.bed",
                 peak_id=peak_ids,
                 mode=seacr_modes,
             )
-            + expand(
+        )
+
+        TARGETS.extend(
+            expand(
                 dynamic_filtered_seacr_dir / "qc/filtered_counts.{mode}.{ext}",
                 mode=seacr_modes,
                 ext=["txt", "hist.txt"],
             )
-            + expand(
+        )
+
+        TARGETS.extend(
+            expand(
                 dynamic_intersected_peaks / "{gen_abd_id}_rep1_v_rep2.{mode}.bed",
                 gen_abd_id=gen_abd_ids,
                 mode=seacr_modes,
             )
-            + expand(
+        )
+
+        TARGETS.extend(
+            expand(
                 dynamic_greedy_consensus_peaks
                 / "{gen_abd_id}_consensus.greedy.{mode}.bed",
                 gen_abd_id=gen_abd_ids,
                 mode=seacr_modes,
             )
-            + expand(
+        )
+
+        TARGETS.extend(
+            expand(
                 dynamic_conservative_consensus_peaks
                 / "{gen_abd_id}_consensus.conservative.{mode}.bed",
                 gen_abd_id=gen_abd_ids,
                 mode=seacr_modes,
             )
-            + expand(
+        )
+
+        TARGETS.extend(
+            expand(
                 dynamic_reciprocal_consensus_peaks
                 / "{gen_abd_id}_consensus.reciprocal.{mode}.bed",
                 gen_abd_id=gen_abd_ids,
                 mode=seacr_modes,
             )
         )
+    if config["peaks_call"]["gopeaks"]["use_gopeaks"]:
+        if config["peaks_call"]["gopeaks"]["use_broad"]:
+            TARGETS.extend(
+                expand(
+                    gopeaks_dir / "peaks/broad/{sample_id}_peaks.bed",
+                    sample_id=tt_ids,
+                )
+            )
+        else:
+            TARGETS.extend(
+                expand(
+                    gopeaks_dir / "peaks/narrow/{sample_id}_peaks.bed",
+                    sample_id=tt_ids,
+                )
+            )
+    if config["peaks_call"]["lanceotron"]["use_lanceotron"]:
+        TARGETS.extend(expand(lanceotron_dir / "{base_id}.done", base_id=tt_ids))
+
+        # DiffBind outputs
+        TARGETS.extend(
+            [
+                analysis_dir / "diffbind" / "pca" / "relaxed_pca.pdf",
+                analysis_dir / "diffbind" / "pca" / "stringent_pca.pdf",
+                analysis_dir / "diffbind" / "relaxed_counts.matrix.csv",
+                analysis_dir / "diffbind" / "stringent_counts.matrix.csv",
+                analysis_dir / "diffbind" / "diffbind_summary.txt",
+                analysis_dir / "diffbind" / "pca" / "relaxed_H3K27ac_pca.pdf",
+                analysis_dir / "diffbind" / "pca" / "stringent_H3K27ac_pca.pdf",
+                analysis_dir / "diffbind" / "pca" / "relaxed_H3K27me3_pca.pdf",
+                analysis_dir / "diffbind" / "pca" / "stringent_H3K27me3_pca.pdf",
+                analysis_dir / "diffbind" / "pca" / "relaxed_H2K119Ub_pca.pdf",
+                analysis_dir / "diffbind" / "pca" / "stringent_H2K119Ub_pca.pdf",
+                analysis_dir / "diffbind" / "dba" / "relaxed_H3K27ac_dba.rds",
+                analysis_dir / "diffbind" / "dba" / "stringent_H3K27ac_dba.rds",
+                analysis_dir / "diffbind" / "dba" / "relaxed_H3K27me3_dba.rds",
+                analysis_dir / "diffbind" / "dba" / "stringent_H3K27me3_dba.rds",
+                analysis_dir / "diffbind" / "dba" / "relaxed_H2K119Ub_dba.rds",
+                analysis_dir / "diffbind" / "dba" / "stringent_H2K119Ub_dba.rds",
+                analysis_dir / "diffbind" / "counts" / "relaxed_H3K27ac_counts_dba.rds",
+                analysis_dir
+                / "diffbind"
+                / "counts"
+                / "stringent_H3K27ac_counts_dba.rds",
+                analysis_dir
+                / "diffbind"
+                / "counts"
+                / "relaxed_H3K27me3_counts_dba.rds",
+                analysis_dir
+                / "diffbind"
+                / "counts"
+                / "stringent_H3K27me3_counts_dba.rds",
+                analysis_dir
+                / "diffbind"
+                / "counts"
+                / "relaxed_H2K119Ub_counts_dba.rds",
+                analysis_dir
+                / "diffbind"
+                / "counts"
+                / "stringent_H2K119Ub_counts_dba.rds",
+                analysis_dir / "h3k27ac" / "ac_lost_in_tbl3.bed",
+                analysis_dir / "h3k27me3" / "bl3_me_lost_in_tbl3.bed",
+                analysis_dir / "h3k27me3" / "me_gained_in_tbl3.bed",
+                # analysis_dir / "h3k27_transition" / "ac_to_me_in_tbl3.bed",
+                # analysis_dir / "h3k27_transition" / "me_to_ac_in_tbl3.bed",
+                # analysis_dir / "diffbind" / "ma_plots" / "relaxed_H3K27ac_ma_plot.pdf",
+                # analysis_dir
+                # / "diffbind"
+                # / "ma_plots"
+                # / "stringent_H3K27ac_ma_plot.pdf",
+                # analysis_dir / "diffbind" / "ma_plots" / "relaxed_H3K27me3_ma_plot.pdf",
+                # analysis_dir
+                # / "diffbind"
+                # / "ma_plots"
+                # / "stringent_H3K27me3_ma_plot.pdf",
+                # analysis_dir / "diffbind" / "ma_plots" / "relaxed_H2K119Ub_ma_plot.pdf",
+                # analysis_dir
+                # / "diffbind"
+                # / "ma_plots"
+                # / "stringent_H2K119Ub_ma_plot.pdf",
+                analysis_dir / "diffbind" / "rds" / "relaxed_H3K27ac_diffbind.rds",
+                analysis_dir / "diffbind" / "rds" / "stringent_H3K27ac_diffbind.rds",
+                analysis_dir / "diffbind" / "rds" / "relaxed_H3K27me3_diffbind.rds",
+                analysis_dir / "diffbind" / "rds" / "stringent_H3K27me3_diffbind.rds",
+                analysis_dir / "diffbind" / "rds" / "relaxed_H2K119Ub_diffbind.rds",
+                analysis_dir / "diffbind" / "rds" / "stringent_H2K119Ub_diffbind.rds",
+            ]
+        )
+
     return TARGETS

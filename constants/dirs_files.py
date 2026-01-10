@@ -95,13 +95,15 @@ dynamic_conservative_consensus_peaks = (
 dynamic_reciprocal_consensus_peaks = (
     seacr_dir / "consensus" / "reciprocal" / temp_peaks_dir
 )
+gopeaks_dir = RESULTS_DIR / "gopeaks"
 analysis_dir = RESULTS_DIR / "analysis"
-#===========================================================================
-#CHIPseeker ANNOTATION
-#===========================================================================
-ChIPseeker_dir= RESULTS_DIR / "ChIPseeker"
-ChIPseeker_seacr_dir= RESULTS_DIR / "ChIPseeker" / "seacr"
-dynamic_chipseeker_seacr_raw_dir= ChIPseeker_seacr_dir / "raw" / temp_peaks_dir
+lanceotron_dir = RESULTS_DIR / "lanceotron"
+# ===========================================================================
+# CHIPseeker ANNOTATION
+# ===========================================================================
+ChIPseeker_dir = RESULTS_DIR / "ChIPseeker"
+ChIPseeker_seacr_dir = RESULTS_DIR / "ChIPseeker" / "seacr"
+dynamic_chipseeker_seacr_raw_dir = ChIPseeker_seacr_dir / "raw" / temp_peaks_dir
 
 # ============================================================================
 # AUXILIARY FILES

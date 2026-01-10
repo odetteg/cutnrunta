@@ -21,6 +21,7 @@ include: "workflows/rules/peaks_qc.smk"
 include: "workflows/rules/bam_merge.smk"
 include: "workflows/rules/bamcompare.smk"
 include: "workflows/rules/h3k27_shift.smk"
+include: "workflows/rules/diffbind.smk"
 include: "constants/common.smk"
 
 

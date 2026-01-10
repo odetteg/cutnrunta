@@ -1,0 +1,7 @@
+name: seacr
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - gopeaks

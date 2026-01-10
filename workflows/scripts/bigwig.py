@@ -1,7 +1,6 @@
 from snakemake.shell import shell
 import pandas as pd
 import json
-import os
 
 bam = snakemake.input.bam
 sample_lens_csv_path = snakemake.input.sample_egs_csv
@@ -12,6 +11,7 @@ normalization = snakemake.params.normalization
 extras = snakemake.params.extras
 threads = snakemake.threads
 base_id = snakemake.wildcards.base_id
+config = snakemake.config
 
 with open(egs_json, "r") as f:
     egs = json.load(f)
@@ -30,12 +30,23 @@ if str(mode_len) not in available_egs:
 
 effective_genome_size = int(egs[str(mode_len)])
 
-cmd_ = (
+if config.get("peaks_call", {}).get("lanceotron", {}).get("use_lanceotron", True):
+    effectiveGenomeSize_params = f"--effectiveGenomeSize {effective_genome_size} "
+
+    binsize = config.get("peaks_call", {}).get("lanceotron", {}).get("binsize", binsize)
+    normalization = (
+        config.get("peaks_call", {})
+        .get("lanceotron", {})
+        .get("normalization", normalization)
+    )
+else:
+    effectiveGenomeSize_params = ""
+
+cmd = (
     f"bamCoverage --numberOfProcessors {threads} "
-    f"--effectiveGenomeSize {effective_genome_size} "
+    f"{effectiveGenomeSize_params}"
     f"--bam {bam} --binSize {binsize} "
     f"--normalizeUsing {normalization} --outFileName {bw} {extras}"
 )
 
-
-shell(cmd_)
+shell(cmd)

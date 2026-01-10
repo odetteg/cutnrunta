@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Session genome="D:\cutnrunta\Ref_genome\BT9_TA_prefixed.fna" locus="BT_NC_037334.1:14811842-14826411" version="8">
+    <Resources>
+        <Resource path="D:\cutnrunta\bigwig\average_bw\BL3_H2K119Ub.bw" type="bw"/>
+        <Resource path="D:\cutnrunta\bigwig\average_bw\TBL3_H3K27ac.bw" type="bw"/>
+        <Resource path="D:\cutnrunta\Ref_genome\BT9_TA_fused.gtf" type="gtf"/>
+        <Resource path="D:\cutnrunta\bigwig\average_bw\BL3_H3K27me3.bw" type="bw"/>
+        <Resource path="D:\cutnrunta\bigwig\average_bw\BL3_H3K27ac.bw" type="bw"/>
+        <Resource path="D:\cutnrunta\bigwig\average_bw\TBL3_H3K27me3.bw" type="bw"/>
+        <Resource path="D:\cutnrunta\bigwig\average_bw\TBL3_H2K119Ub.bw" type="bw"/>
+    </Resources>
+    <Panel height="483" name="DataPanel" width="1198">
+        <Track attributeKey="BL3_H2K119Ub.bw" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="255,204,204" fontSize="10" id="D:\cutnrunta\bigwig\average_bw\BL3_H2K119Ub.bw" name="BL3_H2K119Ub.bw" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="23.52495" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track attributeKey="BL3_H3K27ac.bw" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,102,255" fontSize="10" id="D:\cutnrunta\bigwig\average_bw\BL3_H3K27ac.bw" name="BL3_H3K27ac.bw" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="30.34915" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track attributeKey="BL3_H3K27me3.bw" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="D:\cutnrunta\bigwig\average_bw\BL3_H3K27me3.bw" name="BL3_H3K27me3.bw" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="16.4897" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track attributeKey="TBL3_H2K119Ub.bw" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="255,102,102" fontSize="10" id="D:\cutnrunta\bigwig\average_bw\TBL3_H2K119Ub.bw" name="TBL3_H2K119Ub.bw" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="38.65305" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track attributeKey="TBL3_H3K27ac.bw" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="255,0,0" fontSize="10" id="D:\cutnrunta\bigwig\average_bw\TBL3_H3K27ac.bw" name="TBL3_H3K27ac.bw" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="20.75665" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track attributeKey="TBL3_H3K27me3.bw" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,0,0" fontSize="10" id="D:\cutnrunta\bigwig\average_bw\TBL3_H3K27me3.bw" name="TBL3_H3K27me3.bw" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="12.5411" minimum="0.0" type="LINEAR"/>
+        </Track>
+    </Panel>
+    <Panel height="60" name="FeaturePanel" width="1198">
+        <Track attributeKey="Reference sequence" clazz="org.broad.igv.track.SequenceTrack" fontSize="10" id="Reference sequence" name="Reference sequence" sequenceTranslationStrandValue="+" shouldShowTranslation="false" visible="true"/>
+        <Track attributeKey="BT9_TA_fused.gtf" clazz="org.broad.igv.track.FeatureTrack" colorScale="ContinuousColorScale;0.0;13752.0;255,255,255;0,0,178" fontSize="10" groupByStrand="false" id="D:\cutnrunta\Ref_genome\BT9_TA_fused.gtf" name="BT9_TA_fused.gtf" visible="true"/>
+    </Panel>
+    <PanelLayout dividerFractions="0.8818181818181818"/>
+    <HiddenAttributes>
+        <Attribute name="DATA FILE"/>
+        <Attribute name="DATA TYPE"/>
+        <Attribute name="NAME"/>
+    </HiddenAttributes>
+</Session>

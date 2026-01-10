@@ -38,12 +38,12 @@ picard:
   rmv_duplicates: true
   extra: "--ASSUME_SORT_ORDER=coordinate"
 deeptools:
-  binsize: 20
-  normalization: "RPGC"
+  binsize: 1
+  normalization: "RPKM"
   scale_factor_method: "None"
   operation: "log2"
   rmv_MT_seqs: ""
-  extra: ""
+  extra: "--extendReads"
   multibigwigsummary:
     extra: ""
   plotpca:
@@ -51,8 +51,8 @@ deeptools:
   plotfingerprint:
     extra: "--centerReads"
   bamcompare:
-    binsize: 20
-    extra: "--skipZeroOverZero --verbose"
+    binsize: 10
+    extra: "--skipZeroOverZero --verbose --extendReads"
     normalization: "RPKM"
 mosdepth:
   binSize: 10000
@@ -69,6 +69,25 @@ peaks_call:
     qvalue: 0.05
     broad_cutoff: 0.1
     extra: ""
+  gopeaks:
+    use_gopeaks: true
+    use_broad: false
+    minreads: 5       
+    mdist: 5000       
+    extra: ""         
+    pvalue: 1         
+    slide: 50       
+    minwidth: 1       
+    step: 100     
+  lanceotron:
+    use_lanceotron: true
+    fdr: 0.05
+    window_size: 5000
+    step_size: 1000
+    extra: ""  
+    binsize: 1  
+    normalization: "RPKM"
+    threshold: 4
 
 # Resources by tool
 resources:
@@ -110,6 +129,10 @@ resources:
     cpu: 8
   bam:
     cpu: 8
+  gopeaks:
+    cpu: 8
+    mem_mb: 16GB
+    time: "01:00:00"
   chipseeker:
     cpu: 8
     mem_mb: 32GB

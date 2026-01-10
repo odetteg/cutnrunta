@@ -5,7 +5,7 @@
 #SBATCH --account cutnrunta
 #SBATCH --partition=ipop-up
 #SBATCH --cpus-per-task=16
-#SBATCH --mem=64G
+#SBATCH --mem=256G
 #SBATCH --time=12:00:00
 #SBATCH --output=master_%j.out
 #SBATCH --error=master_%j.err

@@ -63,8 +63,6 @@ rule fastp_trim:
             -o {output.trim_r1} -O {output.trim_r2} \
             -h {output.html} -j {output.json} \
             --thread {resources.cpu} \
-            -a {params.a} \
-            --adapter_sequence_r2 {params.r2_adapter} \
             {params.extras} \
             > {log.std_out} 2> {log.std_err}
         """
@@ -72,7 +70,9 @@ rule fastp_trim:
 
 rule post_trim_fqc:
     input:
-        fastp_trimmed=lambda wc: os.path.join(FASTP_TRIMMED_DIR, f"{wc.base_id}.fastp.trimmed.{wc.read}.fastq.gz",
+        fastp_trimmed=lambda wc: os.path.join(
+            FASTP_TRIMMED_DIR,
+            f"{wc.base_id}.fastp.trimmed.{wc.read}.fastq.gz",
         ),
     output:
         html=FASTQC_QC_FASTP_DIR / "{base_id}.fastp.trimmed.{read}_fastqc.html",

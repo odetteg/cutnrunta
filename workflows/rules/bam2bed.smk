@@ -1,16 +1,17 @@
 rule bam2bed:
     input:
-        deduped = rules.duplicates.output.deduped,
-        chrom_sizes = rules.get_cs.output.cs
+        deduped=rules.duplicates.output.deduped,
+        chrom_sizes=rules.get_cs.output.cs,
     output:
-        temp_bed = temp(RESULTS_DIR / "bedtools/{base_id}.temp.bed"),
-        clean_bed = RESULTS_DIR / "bedtools/{base_id}.clean.bed",
-        fragments_bed = RESULTS_DIR / "bedtools/{base_id}.fragments.bed",
-        bedgraph = RESULTS_DIR / "bedtools/{base_id}.fragments.bedgraph"
-    conda: "../../envs/bedtools.yaml"
+        temp_bed=temp(RESULTS_DIR / "bedtools/{base_id}.temp.bed"),
+        clean_bed=RESULTS_DIR / "bedtools/{base_id}.clean.bed",
+        fragments_bed=RESULTS_DIR / "bedtools/{base_id}.fragments.bed",
+        bedgraph=RESULTS_DIR / "bedtools/{base_id}.fragments.bedgraph",
+    conda:
+        "../../envs/bedtools.yaml"
     threads: config["resources"]["samtools"]["cpu"]
     log:
-        log = "logs/bedtools/{base_id}.bam2bed.log"
+        log="logs/bedtools/{base_id}.bam2bed.log",
     shell:
         """
         (
@@ -26,15 +27,15 @@ rule bam2bed:
 
 rule bed2wig:
     input:
-        bedgraph = rules.bam2bed.output.bedgraph,
-        chrom_sizes = rules.get_cs.output.cs
+        bedgraph=rules.bam2bed.output.bedgraph,
+        chrom_sizes=rules.get_cs.output.cs,
     output:
-        sorted_bedgraph = temp(bw_dir / "bedgraph_bw/{base_id}.sorted.bedgraph"),
-        graph_bw = bw_dir / "bedgraph_bw/{base_id}.bw"
+        sorted_bedgraph=temp(bw_dir / "bedgraph_bw/{base_id}.sorted.bedgraph"),
+        graph_bw=bw_dir / "bedgraph_bw/{base_id}.bw",
     conda:
         "../../envs/bedtools.yaml"
     log:
-        "logs/bedtools/{base_id}.bed2wig.log"
+        "logs/bedtools/{base_id}.bed2wig.log",
     shell:
         """
         sort -k1,1 -k2,2n {input.bedgraph} > {output.sorted_bedgraph}

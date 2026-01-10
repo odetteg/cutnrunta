@@ -215,5 +215,6 @@ Planned features include:
 - Motif enrichment analysis
 - Additional peak callers (SEACR)
 - Automated peak annotation
+- A binning size of 10 or 15 gives a good visualization in the bigwigs. It does not, however, affect the downstream analysis. In the IGV, try autoscall and not log scale.
 
 ---
