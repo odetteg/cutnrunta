@@ -1,7 +1,11 @@
 import os
-from pathlib import Path
-import pandas as pd
 import sys
+import polars as pl
+
+print("Python executable:", sys.executable)
+
+
+print("Polars version:", pl.__version__)
 
 
 def aggregate_samtools_stats(samtools_txt, agg_out):
@@ -26,12 +30,12 @@ def aggregate_samtools_stats(samtools_txt, agg_out):
                         }
                     )
 
-    df = pd.DataFrame(all_data)
-    df.to_csv(agg_out, sep=",", index=False)
+    df = pl.DataFrame(all_data)
+
+    df.write_csv(agg_out)
 
 
-if __name__ == "__main__":
-    samtools_txt = sys.argv[1]
-    agg_out = sys.argv[2]
+input_file = sys.argv[1]
+output_file = sys.argv[2]
 
-    aggregate_samtools_stats(samtools_txt, agg_out)
+aggregate_samtools_stats(input_file, output_file)

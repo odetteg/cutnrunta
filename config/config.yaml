@@ -1,22 +1,26 @@
 ---
 snakefile: snakefile
-RAW_DATA_DIR: "/shared/projects/cutnrunta/so_/data_cp/data/sequenced_2025_11_13"
-REF_DIR: "/shared/projects/cutnrunta/so_/Ref_genome"
-SO_DIR: "/shared/projects/cutnrunta/so_"
-RESULTS_DIR: "/shared/projects/cutnrunta/so_/results"
-FASTP_TRIMMED_DIR: "/shared/projects/cutnrunta/so_/results/trim/fastp"
-FASTP_QC_REPORTS_DIR: "/shared/projects/cutnrunta/so_/results/qc/fastp"
-FASTQC_QC_FASTP_DIR: "/shared/projects/cutnrunta/so_/results/fastqc/trim/fastp"
 
-dir_names:
-  bt2_raw_map_dir: "/shared/projects/cutnrunta/so_/results/map/raw"
-  temp_sort_dir: "/shared/projects/cutnrunta/so_/results/map/temp"
-  samtools_sorted_filtered_dir: "/shared/projects/cutnrunta/so_/results/map/filtered_sorted"
-  sorted_filtered_stats_dir: "/shared/projects/cutnrunta/so_/results/map/filtered_sorted_stats"
+REF_GENOME: "Ref_genome/BT9_TA_prefixed.fna"
+GTF: "Ref_genome/BT9_TA_fused.gtf"
+#Define how the replicates appear in the file paths
+reps:
+  rep1: -1
+  rep2: -2
+genome: "BT9_TA"
+
+# General workflow params
+controls:
+  antibodies:
+    - IgG
+
+rmv_MT_seqs: 
+  mt_threshold: 0.0
+  MT_seq: "BT_NC_006853.1"
 
 
-BT9_TA_REF_FA: "/shared/projects/cutnrunta/so_/Ref_genome/BT9_TA_prefixed.fna"
 
+# Parameters for tools
 fastp_trim:
   extra: "-q 15 -l 20 --correction"
   a: AGATCGGAAGAGCACACGTCTGAACTCCAGTCA
@@ -32,8 +36,89 @@ bam_sort:
   extra: ""
 bam_filter:
   extra: "-q 10 -f 2"
-
-
+picard:
+  rmv_duplicates_tt: false
+  rmv_duplicates_control: true
+  extra: "--ASSUME_SORT_ORDER coordinate"
+deeptools:
+  binsize: 10
+  normalization: "BPM"
+  smoothLength: 40
+  scale_factor_method: "None"
+  operation: "log2"
+  rmv_MT_seqs: ""
+  extra: "--extendReads"
+  multiBigwigSummary:
+    binSize: 10000
+    extra: ""
+    per_transcript_npz:
+      extra: "--metagene"
+  plotCorrelation:
+    corMethod: "pearson"
+    extra: "--skipZeros"
+    plotTitle: "Pearson Correlation of Average Scores Per Transcript"
+    whatToPlot: "scatterplot"
+  plotpca:
+    extra: ""
+  plotfingerprint:
+    extra: "--centerReads"
+  bamcompare:
+    binsize: 10
+    extra: "--skipZeroOverZero --verbose --extendReads"
+    normalization: "RPKM"
+  computeMatrix:
+    mode: "scale-regions" # We can also use 'reference-point' mode
+    reference_point: "center"
+    regionbody_length: 1000 # starting with this for now. May scale up
+    upstream: 3000
+    downstream: 3000
+    binsize: 10
+    averageType: "mean"
+    regionsFileName: "" # Here, we can use a bed, gtf, or whole genome.  will start with the whole genome
+    use_whole_genome: true
+    extra: "" # Will update later.
+mosdepth:
+  binSize: 10000
+peaks_call:
+  seacr:
+    use_seacr: true
+    peak_threshold: 0.01
+    use_control: true # default behaviour. IF set to false, Runs without any control like IgG, hence does not do normolization.
+    filter_threshold: 3
+  macs3:
+    use_macs3: true
+    use_control: false
+    broad: true # If set to "False", runs narrow peaks calls. Set to ""true" for broad.
+    qvalue: 0.05
+    broad_cutoff: 0.1
+    extra: ""
+  gopeaks:
+    use_gopeaks: true
+    use_broad: false
+    minreads: 5       
+    mdist: 5000       
+    extra: ""         
+    pvalue: 1         
+    slide: 50       
+    minwidth: 1       
+    step: 100     
+  lanceotron:
+    use_lanceotron: false
+    extra: ""  
+    binsize: 1  
+    normalization: "RPKM"
+    threshold: 2
+  homer:
+    use_homer: true
+    style: "histone" # "factor" for narrow peaks, "histone" for broad peaks
+    extra: ""
+fold_change:
+  calculate_foldchange: true
+  use_control: true
+  threshold: 4
+  threshold_wo_ctrl: 1
+  binSize: 10000
+# Resources by tool
 resources:
   fastp_trim:
     cpu: 8
@@ -60,4 +145,31 @@ resources:
     mem_mb: 2000
   samtools_idx:
     cpu: 8
+  samtools:
+    cpu : 8
+  mosdepth:
+    cpu: 8
+  deeptools:
+    cpu: 64
+  unique-kmers:
+    mem_mb: 24GB
+    cpu: 8
+  macs3:
+    cpu: 8
+  bam:
+    cpu: 8
+  gopeaks:
+    cpu: 8
+    mem_mb: 16GB
+    time: "01:00:00"
+  chipseeker:
+    cpu: 8
+    mem_mb: 32GB
+    time: "02:00:00"
 
+# Annotation modifications
+chipseeker_annotation:
+  annotate_raw_wcontrol: true
+  annotate_raw_nocontrol: true
+  upstream: 3000
+  downstream: 3000

@@ -1,0 +1,14 @@
+name: diffbind
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - r-base=4.3
+  - bioconductor-diffbind
+  - bioconductor-deseq2
+  - bioconductor-edger
+  - r-tidyverse
+  - r-ggplot2
+  - bioconductor-rtracklayer
+  - bioconductor-genomicranges

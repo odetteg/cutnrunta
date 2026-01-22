@@ -1,9 +1,9 @@
+from constants.dirs_files import *
 rule bt2_build_index:
     input:
-        ref_genome=config["BT9_TA_REF_FA"]
+        ref_genome=BT9_TA_REF_FA
     output:
-       idx=multiext(
-            config["BT9_TA_REF_FA"],
+       idx=multiext(str(BT9_TA_REF_FA),
             ".1.bt2",
             ".2.bt2",
             ".3.bt2",
@@ -27,9 +27,9 @@ rule bt2_build_index:
 
 rule samtools_faidx:
     input:
-        ref_genome=config["BT9_TA_REF_FA"],
+        ref_genome=BT9_TA_REF_FA,
     output:
-        fai=config["BT9_TA_REF_FA"] + ".fai",
+        fai=str(BT9_TA_REF_FA) + ".fai",
     log:
         std_err="logs/samtools/samtools_faidx.err.log",
     shell:

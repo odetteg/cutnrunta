@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from constants.common import *
+from constants.dirs_files import *
 
 # --------------------------
 # Rule for every other common thing
@@ -22,8 +23,8 @@ rule fastqc:
         html=RAW_FASTQC_DIR / "{sample_id}_fastqc.html",
         zip=RAW_FASTQC_DIR / "{sample_id}_fastqc.zip",
     log:
-        out=LOGS_DIR / "{sample_id}_fastqc_raw_out.log",
-        err=LOGS_DIR / "{sample_id}_fastqc_raw_err.log",
+        out=LOGS_DIR / "fastqc/raw/{sample_id}_fastqc_raw_out.log",
+        err=LOGS_DIR / "fastqc/raw/{sample_id}_fastqc_raw_err.log",
     params:
         out_dir=RAW_FASTQC_DIR,
     resources:
@@ -41,10 +42,10 @@ rule fastp_trim:
         read1=lambda wc: get_paired_rds(wc.base_id)[0],
         read2=lambda wc: get_paired_rds(wc.base_id)[1],
     output:
-        trim_r1=config["FASTP_TRIMMED_DIR"] + "/{base_id}.fastp.trimmed.R1.fastq.gz",
-        trim_r2=config["FASTP_TRIMMED_DIR"] + "/{base_id}.fastp.trimmed.R2.fastq.gz",
-        html=config["FASTP_QC_REPORTS_DIR"] + "/{base_id}.fastp.html",
-        json=config["FASTP_QC_REPORTS_DIR"] + "/{base_id}.fastp.json",
+        trim_r1=FASTP_TRIMMED_DIR / "{base_id}.fastp.trimmed.R1.fastq.gz",
+        trim_r2=FASTP_TRIMMED_DIR / "{base_id}.fastp.trimmed.R2.fastq.gz",
+        html=FASTP_QC_REPORTS_DIR / "{base_id}.fastp.html",
+        json=FASTP_QC_REPORTS_DIR / "{base_id}.fastp.json",
     params:
         extras=config["fastp_trim"]["extra"],
         a=config["fastp_trim"]["a"],
@@ -72,18 +73,19 @@ rule fastp_trim:
 rule post_trim_fqc:
     input:
         fastp_trimmed=lambda wc: os.path.join(
-            config["FASTP_TRIMMED_DIR"],
+            FASTP_TRIMMED_DIR,
             f"{wc.base_id}.fastp.trimmed.{wc.read}.fastq.gz",
         ),
     output:
-        html=config["FASTQC_QC_FASTP_DIR"]
-        + "/{base_id}.fastp.trimmed.{read}_fastqc.html",
-        zip=config["FASTQC_QC_FASTP_DIR"] + "/{base_id}.fastp.trimmed.{read}_fastqc.zip",
+        html=FASTQC_QC_FASTP_DIR / "{base_id}.fastp.trimmed.{read}_fastqc.html",
+        zip=FASTQC_QC_FASTP_DIR / "{base_id}.fastp.trimmed.{read}_fastqc.zip",
     log:
-        std_out=str(LOGS_DIR) + "/{base_id}.fastqc.fastp.trimmed.{read}.out.log",
-        std_err=str(LOGS_DIR) + "/{base_id}.fastqc.fastp.trimmed.{read}.err.log",
+        std_out=LOGS_DIR
+        / "fastqc/fastp_trim/{base_id}.fastqc.fastp.trimmed.{read}.out.log",
+        std_err=LOGS_DIR
+        / "fastqc/fastp_trim/{base_id}.fastqc.fastp.trimmed.{read}.err.log",
     params:
-        out_dir=config["FASTQC_QC_FASTP_DIR"],
+        out_dir=FASTQC_QC_FASTP_DIR,
     resources:
         cpus=4,
     shell:

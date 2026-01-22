@@ -1,0 +1,9 @@
+name: peaks
+channels: 
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.11
+  - macs3=3.0.3
+  - pandas

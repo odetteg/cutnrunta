@@ -1,0 +1,16 @@
+name: deeptools
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - python>=3.11
+  - deeptools
+  - numpy
+  - matplotlib
+  - pandas
+  - wiggletools
+  - libbigwig
+  - ucsc-wigtobigwig
+  - pyyaml

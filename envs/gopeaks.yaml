@@ -1,0 +1,7 @@
+name: gopeaks
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - gopeaks

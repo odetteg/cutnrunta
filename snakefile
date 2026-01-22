@@ -12,54 +12,20 @@ include: "workflows/rules/idx.smk"
 include: "workflows/rules/map.smk"
 include: "workflows/rules/multiqc.smk"
 include: "workflows/rules/plots.smk"
+include: "workflows/rules/read_len.smk"
+include: "workflows/rules/bigwig.smk"
+include: "workflows/rules/deeptools.smk"
+include: "workflows/rules/bam2bed.smk"
+include: "workflows/rules/peaks.smk"
+include: "workflows/rules/peaks_qc.smk"
+include: "workflows/rules/bam_merge.smk"
+include: "workflows/rules/bamcompare.smk"
+include: "workflows/rules/h3k27_shift.smk"
+include: "workflows/rules/diffbind.smk"
+include: "constants/common.smk"
+include: "workflows/rules/fc.smk"
 
 
 rule all:
     input:
-        raw_fastqc_rpts=expand(
-            str(RAW_FASTQC_DIR) + "/{sample_id}_fastqc.{ext}",
-            ext=["html", "zip"],
-            sample_id=sample_ids,
-        ),
-        fastp_trimmed_fqc_rpt=expand(
-            config["FASTQC_QC_FASTP_DIR"]
-            + "/{base_id}.fastp.trimmed.{read}_fastqc.{ext}",
-            base_id=base_ids,
-            read=["R1", "R2"],
-            ext=["html", "zip"],
-        ),
-        fastp_trimms=expand(
-            config["FASTP_TRIMMED_DIR"] + "/{base_id}.fastp.trimmed.{read}.fastq.gz",
-            read=["R1", "R2"],
-            base_id=base_ids,
-        ),
-        fastp_rpts=expand(
-            config["FASTP_QC_REPORTS_DIR"] + "/{base_id}.fastp.{ext}",
-            ext=["html", "json"],
-            base_id=base_ids,
-        ),
-        bt2_build_index=multiext(
-            config["BT9_TA_REF_FA"],
-            ".1.bt2",
-            ".2.bt2",
-            ".3.bt2",
-            ".4.bt2",
-            ".rev.1.bt2",
-            ".rev.2.bt2",
-        ),
-        fai=config["BT9_TA_REF_FA"] + ".fai",
-        raw_bt2_mapped=expand(
-            config["dir_names"]["bt2_raw_map_dir"]
-            + "/{base_id}.raw.unsorted.unfiltered.bam",
-            base_id=base_ids,
-        ),
-        sorted_filtered_bam=expand(
-            config["dir_names"]["samtools_sorted_filtered_dir"]
-            + "/{base_id}.sorted.filtered.bam",
-            base_id=base_ids,
-        ),
-        agg_stats_csv=agg_stats_csv,
-        samtools_txt=samtools_txt,
-        frag_len_dst_pdf=frag_len_dst_pdf,
-        frag_len_dst_facet_pdf=frag_len_dst_facet_pdf,
-        multiqc_rpt=RESULTS_DIR / "qc/multiqc/multiqc.html",
+        targets(),
